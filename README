@@ -1,0 +1,9 @@
+BookTrack
+=========
+
+A personal reading journal built with Ruby and Sinatra.
+Track what you have read, what you are reading, and what is next on your list.
+
+build by using  Ruby, Sinatra, SQLite3, Puma, ERB.
+
+[*] for reference see docs/
