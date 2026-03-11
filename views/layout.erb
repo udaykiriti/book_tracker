@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookTrack — Your Reading Journal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <div class="nb-inner">
+      <a href="/" class="brand">
+        <span class="brand-icon-wrap">
+          <i class="fa-solid fa-book-open-reader"></i>
+        </span>
+        <span class="brand-wordmark">
+          <span class="brand-book">Book</span><span class="brand-track">Track</span>
+        </span>
+      </a>
+
+      <div class="nav-links">
+        <a href="/" class="nav-link">
+          <i class="fa-solid fa-gauge-high"></i> Dashboard
+        </a>
+        <a href="/books" class="nav-link">
+          <i class="fa-solid fa-layer-group"></i> My Books
+        </a>
+        <a href="/books/new" class="nav-cta">
+          <i class="fa-solid fa-plus"></i> Add Book
+        </a>
+        <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle dark mode">
+          <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+      </div>
+
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Open menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <div class="mobile-nav" id="mobileNav">
+      <a href="/"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <a href="/books"><i class="fa-solid fa-layer-group"></i> My Books</a>
+      <a href="/books/new"><i class="fa-solid fa-plus"></i> Add Book</a>
+    </div>
+  </nav>
+
+  <!-- ── FLASH TOAST ── -->
+  <% if (f = pop_flash) %>
+    <div class="toast-wrap">
+      <div class="toast toast-<%= f['type'] %>">
+        <i class="fa-solid <%= f['type'] == 'success' ? 'fa-circle-check' : 'fa-circle-xmark' %> toast-icon"></i>
+        <span class="toast-msg"><%= f['msg'] %></span>
+        <button class="toast-x" onclick="this.closest('.toast').remove()" title="Dismiss">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+  <% end %>
+
+  <main>
+    <%= yield %>
+  </main>
+
+  <footer>
+    BookTrack &nbsp;&middot;&nbsp; Your personal reading journal
+  </footer>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
