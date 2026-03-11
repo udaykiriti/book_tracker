@@ -1,0 +1,11 @@
+# Prioritize backend language stats for this Sinatra app
+*.rb linguist-language=Ruby
+views/*.erb linguist-language=Ruby
+
+# Keep non-code/support files from skewing language breakdown
+docs/** linguist-documentation
+vendor/** linguist-vendored
+
+# Treat front-end assets as vendored for language stats
+public/css/** linguist-vendored
+public/js/** linguist-vendored
