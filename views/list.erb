@@ -1,0 +1,119 @@
+<div class="page-hdr">
+  <div>
+    <h1 class="page-title">My Library</h1>
+    <p class="page-subtitle">Browse, search and manage your books</p>
+  </div>
+  <a href="/books/new" class="btn btn-primary">
+    <i class="fa-solid fa-plus"></i> Add Book
+  </a>
+</div>
+
+<!-- ── STATUS FILTER CHIPS ── -->
+<div class="filter-row">
+  <a href="/books?sort=<%= @sort %><%= @search && !@search.empty? ? "&search=#{@search}" : '' %>"
+     class="chip <%= 'active' unless @status_filter %>">
+    All <span class="chip-n"><%= @counts['all'] %></span>
+  </a>
+  <% STATUSES.each do |s| %>
+    <a href="/books?status=<%= s %>&sort=<%= @sort %><%= @search && !@search.empty? ? "&search=#{@search}" : '' %>"
+       class="chip <%= 'active' if @status_filter == s %>">
+      <%= s %> <span class="chip-n"><%= @counts[s] %></span>
+    </a>
+  <% end %>
+</div>
+
+<!-- ── SEARCH & SORT BAR ── -->
+<form method="get" action="/books" class="search-bar">
+  <% if @status_filter %>
+    <input type="hidden" name="status" value="<%= @status_filter %>">
+  <% end %>
+  <div class="sw">
+    <i class="fa-solid fa-magnifying-glass si"></i>
+    <input type="text" name="search" value="<%= @search %>"
+           placeholder="Search by title, author or genre…"
+           class="search-input" autocomplete="off">
+  </div>
+  <select name="sort" class="sort-select" onchange="this.form.submit()">
+    <option value="newest"     <%= 'selected' if @sort == 'newest'     %>>Newest first</option>
+    <option value="oldest"     <%= 'selected' if @sort == 'oldest'     %>>Oldest first</option>
+    <option value="title_asc"  <%= 'selected' if @sort == 'title_asc'  %>>Title A → Z</option>
+    <option value="title_desc" <%= 'selected' if @sort == 'title_desc' %>>Title Z → A</option>
+    <option value="author"     <%= 'selected' if @sort == 'author'     %>>Author A → Z</option>
+    <option value="rating"     <%= 'selected' if @sort == 'rating'     %>>Top rated</option>
+  </select>
+  <button type="submit" class="btn btn-primary">
+    <i class="fa-solid fa-magnifying-glass"></i> Search
+  </button>
+</form>
+
+<p style="margin-bottom:16px">
+  <span class="pill">
+    <i class="fa-solid fa-list" style="margin-right:4px;font-size:.75rem"></i>
+    <%= @books.size %> book<%= @books.size == 1 ? '' : 's' %>
+    <%= " &middot; #{@status_filter}" if @status_filter %>
+    <%= " &middot; &ldquo;#{@search}&rdquo;" if @search && !@search.empty? %>
+  </span>
+</p>
+
+<!-- ── BOOK GRID ── -->
+<% if @books.empty? %>
+  <div class="empty-state">
+    <div class="empty-icon-wrap">
+      <i class="fa-solid <%= @search && !@search.empty? ? 'fa-magnifying-glass' : 'fa-layer-group' %>"></i>
+    </div>
+    <div class="empty-title">
+      <%= @search && !@search.empty? ? 'No results found' : 'No books here yet' %>
+    </div>
+    <p class="empty-sub">
+      <%= @search && !@search.empty? \
+            ? 'Try a different search term or clear the filter.' \
+            : 'Add a book to get started!' %>
+    </p>
+    <% unless @search && !@search.empty? %>
+      <a href="/books/new" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> Add Book
+      </a>
+    <% end %>
+  </div>
+
+<% else %>
+  <div class="books-grid">
+    <% @books.each do |book| %>
+      <div class="book-card bc-<%= status_css(book['status']) %>">
+        <div class="bc-body">
+          <div class="bc-tags">
+            <span class="badge b-<%= status_css(book['status']) %>"><%= book['status'] %></span>
+            <% if book['genre'] && !book['genre'].empty? %>
+              <span class="badge b-genre">
+                <i class="fa-solid fa-tag" style="font-size:.55rem"></i>
+                <%= book['genre'] %>
+              </span>
+            <% end %>
+          </div>
+          <div class="bc-title"><%= book['title'] %></div>
+          <div class="bc-author">
+            <i class="fa-solid fa-pen-nib" style="font-size:.72rem;margin-right:3px"></i>
+            <%= book['author'] %>
+          </div>
+          <% if book['rating'].to_i > 0 %>
+            <div class="bc-stars"><%= render_stars(book['rating']) %></div>
+          <% end %>
+          <% if book['notes'] && !book['notes'].empty? %>
+            <div class="bc-notes"><%= book['notes'] %></div>
+          <% end %>
+        </div>
+        <div class="bc-footer">
+          <a href="/books/<%= book['id'] %>/edit" class="btn btn-ghost btn-sm btn-icon">
+            <i class="fa-solid fa-pen-to-square"></i> Edit
+          </a>
+          <form method="post" action="/books/<%= book['id'] %>/delete" style="margin:0"
+                onsubmit="return confirm('Remove this book from your library?')">
+            <button type="submit" class="btn btn-danger btn-sm btn-icon">
+              <i class="fa-solid fa-trash-can"></i> Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
