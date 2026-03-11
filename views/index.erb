@@ -1,0 +1,115 @@
+<div class="hero">
+  <!-- decorative stamp in corner -->
+  <div class="hero-stamp">
+    <i class="fa-solid fa-book-open-reader"></i>
+  </div>
+
+  <div class="hero-left">
+    <div class="hero-kicker">
+      <span class="hk-dot"></span>
+      <span>Your reading journal</span>
+    </div>
+
+    <h1 class="hero-title">
+      <span class="ht-plain">Book</span>
+      <span class="ht-filled">Track</span>
+    </h1>
+
+    <p class="hero-sub">
+      Track what you've read, what you're reading,
+      and what's next on the list.
+    </p>
+  </div>
+
+  <div class="hero-divider"></div>
+
+  <div class="hero-right">
+    <p class="hero-right-label">Get started</p>
+    <div class="hero-ctas">
+      <a href="/books/new" class="btn btn-primary btn-hero">
+        <i class="fa-solid fa-plus"></i> Add a Book
+      </a>
+      <a href="/books" class="btn btn-ghost btn-hero">
+        <i class="fa-solid fa-layer-group"></i> My Library
+      </a>
+    </div>
+    <div class="hero-meta">
+      <span><i class="fa-solid fa-circle-check"></i> Free &amp; open</span>
+      <span><i class="fa-solid fa-lock"></i> Stored locally</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── STATS GRID ── -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon"><i class="fa-solid fa-books" style="color:var(--primary)"></i></div>
+    <div class="stat-n"><%= @stats[:total] %></div>
+    <div class="stat-lbl">Total Books</div>
+  </div>
+  <div class="stat-card sc-completed">
+    <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+    <div class="stat-n"><%= @stats[:by_status]['Completed'] %></div>
+    <div class="stat-lbl">Completed</div>
+  </div>
+  <div class="stat-card sc-in-progress">
+    <div class="stat-icon"><i class="fa-solid fa-book-open"></i></div>
+    <div class="stat-n"><%= @stats[:by_status]['In Progress'] %></div>
+    <div class="stat-lbl">In Progress</div>
+  </div>
+  <div class="stat-card sc-to-read">
+    <div class="stat-icon"><i class="fa-solid fa-bookmark"></i></div>
+    <div class="stat-n"><%= @stats[:by_status]['To Read'] %></div>
+    <div class="stat-lbl">To Read</div>
+  </div>
+  <div class="stat-card sc-on-hold">
+    <div class="stat-icon"><i class="fa-solid fa-circle-pause"></i></div>
+    <div class="stat-n"><%= @stats[:by_status]['On Hold'] %></div>
+    <div class="stat-lbl">On Hold</div>
+  </div>
+  <div class="stat-card sc-dropped">
+    <div class="stat-icon"><i class="fa-solid fa-circle-xmark"></i></div>
+    <div class="stat-n"><%= @stats[:by_status]['Dropped'] %></div>
+    <div class="stat-lbl">Dropped</div>
+  </div>
+  <% if @stats[:avg_rating] %>
+  <div class="stat-card">
+    <div class="stat-icon"><i class="fa-solid fa-star" style="color:#f59e0b"></i></div>
+    <div class="stat-n" style="font-size:1.9rem"><%= @stats[:avg_rating] %></div>
+    <div class="stat-lbl">Avg Rating</div>
+  </div>
+  <% end %>
+</div>
+
+<!-- ── RECENT BOOKS ── -->
+<% if @recent.any? %>
+  <div class="sec-hdr">
+    <span class="sec-label">Recently Added</span>
+    <a href="/books" class="btn btn-ghost btn-sm">
+      See all <i class="fa-solid fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="recent-list">
+    <% @recent.each do |b| %>
+      <a href="/books/<%= b['id'] %>/edit" class="recent-item">
+        <div class="ri-bar" style="background:<%= status_color(b['status']) %>"></div>
+        <div class="ri-info">
+          <div class="ri-title"><%= b['title'] %></div>
+          <div class="ri-author">by <%= b['author'] %></div>
+        </div>
+        <span class="badge b-<%= status_css(b['status']) %>"><%= b['status'] %></span>
+      </a>
+    <% end %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <div class="empty-icon-wrap">
+      <i class="fa-regular fa-book-open"></i>
+    </div>
+    <div class="empty-title">Your library is empty</div>
+    <p class="empty-sub">Start tracking your reading journey by adding your first book.</p>
+    <a href="/books/new" class="btn btn-primary">
+      <i class="fa-solid fa-plus"></i> Add Your First Book
+    </a>
+  </div>
+<% end %>
