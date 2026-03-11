@@ -1,0 +1,98 @@
+<%
+  # Helper: current rating value (handles both new and error-redisplay)
+  cur_rating = (@book && @book['rating'].to_i) || 0
+%>
+
+<div class="form-page">
+  <div class="form-card">
+    <h1 class="form-title">Add New Book</h1>
+    <p class="form-sub">Fill in the details to add a book to your library.</p>
+
+    <% if @error %>
+      <div class="alert alert-error">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <%= @error %>
+      </div>
+    <% end %>
+
+    <form method="post" action="/books">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="title">
+            Title <span class="req">*</span>
+          </label>
+          <input type="text" id="title" name="title" class="form-control"
+                 value="<%= @book && @book['title'] %>"
+                 placeholder="Book title" required autofocus>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="author">
+            Author <span class="req">*</span>
+          </label>
+          <input type="text" id="author" name="author" class="form-control"
+                 value="<%= @book && @book['author'] %>"
+                 placeholder="Author name" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="status">Reading Status</label>
+          <select id="status" name="status" class="form-control" required>
+            <% STATUSES.each do |s| %>
+              <option value="<%= s %>"
+                      <%= 'selected' if (@book && @book['status'] == s) || (!@book && s == 'To Read') %>>
+                <%= s %>
+              </option>
+            <% end %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="genre">Genre</label>
+          <input type="text" id="genre" name="genre" class="form-control"
+                 value="<%= @book && @book['genre'] %>"
+                 placeholder="e.g. Fiction" list="genre-list">
+          <datalist id="genre-list">
+            <% GENRES.each do |g| %><option value="<%= g %>"><% end %>
+          </datalist>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Your Rating</label>
+        <div class="star-widget" data-value="<%= cur_rating %>">
+          <input type="hidden" name="rating" value="<%= cur_rating %>">
+          <% 5.times do |i| %>
+            <button type="button"
+                    class="star-btn<%= ' filled' if (i + 1) <= cur_rating %>"
+                    data-value="<%= i + 1 %>">
+              <i class="<%= (i + 1) <= cur_rating ? 'fa-solid' : 'fa-regular' %> fa-star"></i>
+            </button>
+          <% end %>
+          <span class="rlabel">
+            <%= cur_rating > 0 ? "#{cur_rating} / 5 stars" : 'Not rated' %>
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="notes">Notes / Review</label>
+        <textarea id="notes" name="notes" class="form-control"
+                  placeholder="Your thoughts, notes or a mini review…"><%= @book && @book['notes'] %></textarea>
+      </div>
+
+      <hr class="form-divider">
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          <i class="fa-solid fa-plus"></i> Add to Library
+        </button>
+        <a href="/books" class="btn btn-ghost">
+          <i class="fa-solid fa-xmark"></i> Cancel
+        </a>
+      </div>
+
+    </form>
+  </div>
+</div>
