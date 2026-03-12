@@ -2,8 +2,15 @@ BookTrack
 =========
 
 A personal reading journal built with Ruby and Sinatra.
-Track what you have read, what you are reading, and what is next on your list.
+Track what you have read, what you are reading, and what is 
+next on your list so you can get an idea of what you have done 
+and what you need to be.
 
-build by using  Ruby, Sinatra, SQLite3, Puma, ERB.
+Built with Ruby, Sinatra, SQLite3, Puma, and ERB.
 
-[*] for reference see docs/
+- This is a small learning project.
+- For an overview of the project, see the `docs/` folder.
+- I'm new to Ruby, so this project is experimental.
+- The app stores data locally in `books.db`.
+- No external services or APIs are required.
+- See `docs/getting-started.md` for setup and run instructions.
