@@ -9,13 +9,17 @@
 </div>
 
 <!-- ── STATUS FILTER CHIPS ── -->
+<%
+  base_filter_params = { 'sort' => @sort }
+  base_filter_params['search'] = @search if @search && !@search.empty?
+%>
 <div class="filter-row">
-  <a href="/books?sort=<%= @sort %><%= @search && !@search.empty? ? "&search=#{@search}" : '' %>"
+  <a href="/books?<%= Rack::Utils.build_query(base_filter_params) %>"
      class="chip <%= 'active' unless @status_filter %>">
     All <span class="chip-n"><%= @counts['all'] %></span>
   </a>
   <% STATUSES.each do |s| %>
-    <a href="/books?status=<%= s %>&sort=<%= @sort %><%= @search && !@search.empty? ? "&search=#{@search}" : '' %>"
+    <a href="/books?<%= Rack::Utils.build_query(base_filter_params.merge('status' => s)) %>"
        class="chip <%= 'active' if @status_filter == s %>">
       <%= s %> <span class="chip-n"><%= @counts[s] %></span>
     </a>
